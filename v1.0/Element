@@ -1,0 +1,203 @@
+function Element(posX, posY, density, rType){
+	this.matrix = []
+	this.type = false 
+	this.height = false
+	this.width = false
+	this.density = false
+	this.compressed = false
+	this.positionX = false
+	this.positionY = false
+	this.Check = function (text){
+		//alert('::' + text)
+	}
+	
+	this.Init = function (posX, posY, density, rType){
+		this.positionX = posX
+		this.positionY = posY
+		//this.setDensity(density)
+		this.setType(rType)
+		this.Check("type -> " +this.type)
+		if (this.type < 1 || this.type > 6){
+			return false;
+		}	else {
+				switch (this.type) {
+				case 1:
+					this.setMatrix([[this.type],[this.type],[this.type],[this.type]])
+					this.setHeight(4);
+					this.setWidth(1);
+					break;
+				case 2:
+					this.setMatrix([[this.type,this.type],[this.type,this.type]]);
+					this.setHeight(2);
+					this.setWidth(2);
+					break;
+				case 3:
+					this.setMatrix([[0,this.type,this.type],[this.type,this.type,0]]);
+					this.setHeight(2);
+					this.setWidth(3);
+					break;
+				case 4:
+					this.setMatrix([[this.type,this.type,0],[0,this.type,this.type]]);
+					this.setHeight(2);
+					this.setWidth(3);
+					break;
+				case 5:
+					this.setMatrix([[this.type,0],[this.type,0],[this.type,this.type]]);
+					this.setHeight(3);
+					this.setWidth(2);
+					break;
+				case 6:
+					this.setMatrix([[0,this.type],[0,this.type],[this.type,this.type]]);
+					this.setHeight(3);
+					this.setWidth(2);
+					break;
+				default:
+					this.setMatrix([[this.type,this.type],[this.type,this.type]]);
+					this.setHeight(2);
+					this.setWidth(2);
+					break;
+			}
+			this.Check("Matrica -> "+this.matrix[0][1])
+			this.Check("Dimension []->"+this.matrix.length)
+			this.Check("Dimension [][]->"+this.matrix[0].length)
+			this.setCompressed(1);
+			this.decompressMatrix(); 
+			this.compressMatrix();
+			this.rotateRight()
+			this.rotateLeft()
+		}
+	}
+	this.decompressMatrix = function(){
+		if (this.getCompressed() == 1) {
+			tmpMatrix = []
+			for (i = 0; i < this.matrix.length; i++) {
+				for (j = 0; j < this.matrix[0].length; j++) {
+					for (k = 0; k < this.getDensity(); k++) {
+						tmpMatrix[i][j * this.getDensity() + k] = this.matrix[i][j];
+					}
+				}
+			}
+			this.matrix = tmpMatrix;
+			this.setWidth(this.getWidth() * this.getDensity());
+			this.setCompressed(0);
+		}
+		this.Check("Kompresija ->"+this.getCompressed())
+	}
+	this.compressMatrix = function(){
+		if (this.getCompressed() == 0) {
+			tmpMatrix = []
+			for (i = 0; i < tmpMatrix.length; i++) {
+				for (j = 0; j < tmpMatrix[0].length; j++) {
+					tmpMatrix[i][j] = this.matrix[i][j * this.getDensity()];
+				}
+			}
+			this.matrix = tmpMatrix;
+			this.setWidth(this.getWidth() / this.getDensity());
+			this.setCompressed(1);
+		}
+		this.Check("Dekompresija -> " + this.getCompressed())
+	}
+	
+	this.rotateRight=function () {
+		this.compressMatrix();
+		tmp = []
+		for (i = 0; i < this.getHeight(); i++) {
+			for (j = 0; j < this.getWidth(); j++) {
+				alert(i)
+				tmp[j][this.getHeight() - i - 1] = this.matrix[i][j];
+			}
+		}
+		this.matrix = tmp;
+		tmpHW = this.getHeight();
+		this.setHeight(this.getWidth());
+		this.setWidth(tmpHW);
+		this.decompressMatrix();
+		this.Check("Rotate right ->");
+	}
+	this.rotateLeft = function() {
+		this.compressMatrix();
+		tmp = []
+		for (i = 0; i < this.getHeight(); i++) {
+			for (j = 0; j < this.getWidth(); j++) {
+				tmp[this.getWidth() - j - 1][i] = this.matrix[i][j];
+			}
+		}
+		this.matrix = tmp;
+		tmpHW = this.getHeight();
+		this.setHeight(this.getWidth());
+		this.setWidth(tmpHW);
+		this.decompressMatrix();
+		this.Check("Rotate left ->");
+	}
+	
+	this.getDensity = function() {
+		return this.density;
+	}
+	this.setDensity = function(density) {
+		this.density = density;
+	}
+	
+	this.setPosition  = function(posX, posY) {
+		this.positionX = posX;
+		this.positionY = posY;
+	}
+	this.getPositionX = function() {
+		return this.positionX;
+	}
+	this.getPositionY = function() {
+		return this.positionY;
+	}
+	this.incPositionX = function() {
+		this.positionX++;
+	}
+	this.decPositionX = function() {
+		this.positionX--;
+	}
+	this.incPositionY = function() {
+		this.positionY++;
+	}
+	this.decPositionY = function() {
+		this.positionY--;
+	}
+	this.setPositionX  = function(num) {
+		this.positionX = num;
+	}
+	this.setPositionY  = function(num) {
+		this.positionY = num;
+	}
+	this.getHeight = function()  {
+		return this.height;
+	}
+	this.setHeight  = function(height) {
+		this.height = height;
+	}
+	this.getWidth = function()  {
+		return this.width;
+	}
+	this.setWidth = function(width) {
+		this.width = width;
+	}
+	this.getMatrix = function()  {
+		return this.matrix;
+	}
+	this.setMatrix = function(matrix) {
+		this.matrix = matrix;
+	}
+	
+	this.getType = function(){
+		return this.type;
+	}
+	this.setType = function(type){
+		this.type = type;
+	}
+	
+	this.getCompressed = function() {
+		return this.compressed;
+	}
+	this.setCompressed = function (compressed) {
+		this.compressed = compressed;
+	}
+	
+	/* INIT */
+	this.Init(posX, posY, density, rType)
+}
