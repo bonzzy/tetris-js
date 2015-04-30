@@ -1,0 +1,13 @@
+function Square(){
+  var color = false
+  
+  this.Square = function (){}
+  
+  this.getColor = function (){
+    return this.color
+  }
+  
+  this.setColor(colorID){
+    this.color = colirID
+  }
+}
